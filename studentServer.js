@@ -7,6 +7,14 @@ var app=express();
 var http = require('http');
 var httpServer = http.createServer(app);
 httpServer.listen(4480);
+
+//adding functionality to log the requests 
+app.use(function(req,res,next) {
+	var filename=path.basename(req.url);
+	var extension=path.extname(filename);
+	console.log("The file " + filename + " was requested.");
+	next();
+})
 app.get('/',function(req,res){
-	res.send("hellow world from the HTTP server");
+	res.send("hello world from the HTTP server");
 });
