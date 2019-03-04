@@ -15,9 +15,6 @@ app.use(function(req,res,next) {
 	console.log("The file " + filename + " was requested.");
 	next();
 })
-app.get('/:fileName',function(req,res){
-	//run some server-side code
-	console.log(fileName +'requested');
-	// note that _dirname gives the path to the studentServer.js file
-	res.sendFile(_dirname + '/' + fileName);
-});
+//serve static files e.g. html, css 
+//this should always be the last line in the server file
+app.use(express.static(_dirname));
