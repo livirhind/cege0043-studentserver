@@ -13,11 +13,11 @@ app.get('/', function (req, res) {
 });
 
 //adding functionality to log the requests 
-//app.use(function(req,res,next) {
-	//res.header("Access-Control-Allow-Origin","*");
-	//res.header("Access-Control-Allow-Headers","X-Requested-With");
-	//next();
-//});
+app.use(function(req,res,next) {
+	res.header("Access-Control-Allow-Origin","*");
+	res.header("Access-Control-Allow-Headers","X-Requested-With");
+	next();
+});
 app.use(function(req,res,next){
 	var filename = path.basename(req.url);
     var extension = path.extname(filename);
