@@ -15,6 +15,9 @@ app.use(function(req,res,next) {
 	console.log("The file " + filename + " was requested.");
 	next();
 })
-app.get('/',function(req,res){
-	res.send("hello world from the HTTP server");
+app.get('/test.html',function(req,res){
+	//run some server-side code
+	console.log('test.html requested');
+	// note that _dirname gives the path to the studentServer.js file
+	res.sendFile(_dirname + '/test.html');
 });
