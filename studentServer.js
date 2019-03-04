@@ -15,8 +15,12 @@ app.use(function(req,res,next) {
 	console.log("The file " + filename + " was requested.");
 	next();
 })
-app.get('/', function(req,res){
-	res.send("hello world from HTTP server");
+app.get('/:fileName', function(req,res){
+	//run some server side code 
+	var fileName=req.params.fileName;
+	console.log(fileName + 'requested');
+
+	res.send(_dirname + '/' + fileName);
 })
 //serve static files e.g. html, css 
 //this should always be the last line in the server file
