@@ -6,7 +6,45 @@ var app=express();
 //due to certificate issues it rejects the https files if they are not directly called in a typed URL
 var http = require('http');
 var httpServer = http.createServer(app);
+
+var fs= require('fs');
+var pg = require('pg');
+var configtext = ""+fs.readFileSync("/home/studentuser/certs/postGISConnection.js");
+
+//now convert the configuration file into the correct format -i.e. a name/value pair array
+var configarray = configtext.split(",");
+var config = {};
+for (var i - 0; i < configarray.length; i++){
+	var split=configarray[i].split(':');
+	config[split[0].trim()]=split[1].trim();
+}
+
+var pool = new pg.Pool(config);
+
+var bodyParser = require('body-parser');
+app.use(bodyParser.urlencoded({
+	extended: true
+}));
+app.use(bodyParser.json());
+
 httpServer.listen(4480);
+
+app.get('/postgustest', function(req,res){
+	pool.connect(function(err,client,done){
+		if(err){
+			console.log("not able to get connection"+ err);
+			res.status(400).send(err);
+		}
+		client.query('SELECT name FROM london_poi', function(err,result){
+			done();
+			if(err){
+				console.log(err);
+				res.status(400).send(err);
+			}
+			res.status(200).send(result.rows);
+		});
+	});
+});
 
 app.get('/', function (req, res) {
     res.send("hello world from the HTTP server");
