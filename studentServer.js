@@ -29,7 +29,7 @@ for (var i = 0; i < configarray.length; i++){
 	var split = configarray[i].split(':');
 	config[split[0].trim()]=split[1].trim();
 }
-
+console.log(config);
 var pool = new pg.Pool(config);
  
 
@@ -37,6 +37,7 @@ var pool = new pg.Pool(config);
 app.use(function(req,res,next){
 	res.header("Access-Control-Allow-Origin","*");
 	res.header("Access-Control-Allow-Headers","X-Requested-With");
+    res.setHeader('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
     next();
 });
 
@@ -59,12 +60,32 @@ res.status(200).send(result.rows);
 });
 });
 
-app.post('/reflectData', function(req,res){
+app.post('/uploadData', function(req,res){
 	//note that we are using POST here as we are uploading data 
 	//so the parameters form part of the BODY of the request rather than the RESTful API
 	console.dir(req.body);
-	//for now, jut echo the request back to the client
-	res.send(req.body);
+
+	pool.connect(function(err,client,done){
+		if(err){
+			console.log("not able to get connection"+err);
+			res.status(400).send(err);
+		}
+		var name = req.body.name;
+		var surname = req.body.surname;
+		var modulecode=req.body.modulecode;
+		var portnum = req.body.port_id;
+		var querystring = "INSERT into formdata (name,surname,modulecode,port_id) values ($1,$2,$3,$4)";
+		console.log(querystring);
+		client.query(querystring,[name, surname, modulecode,portnum], function(err,result){
+			done();
+			if(err){
+				console.log(err);
+				res.status(400).send(err);
+			}
+             res.status.send("row inserted");
+		});
+	});
+
 
 });
 
