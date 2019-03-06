@@ -29,7 +29,7 @@ app.use(bodyParser.json());
 
 httpServer.listen(4480);
 
-app.get('/postgustest', function(req,res){
+app.get('/postgistest', function(req,res){
 	pool.connect(function(err,client,done){
 		if(err){
 			console.log("not able to get connection"+ err);
