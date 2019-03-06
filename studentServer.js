@@ -26,6 +26,7 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(bodyParser.json());
 
+httpServer.listen(4480);
 
 //functionality to allow cross-domain queries when PhoneGap is running a server
 app.use(function(req,res,next){
@@ -45,23 +46,7 @@ app.post('/reflectData',function(req,res){
   res.send(req.body);
 });
 
-//testing the connection
-app.get('/postgistest', function (req,res) {
-pool.connect(function(err,client,done) {
-if(err){
-console.log("not able to get connection "+ err);
-res.status(400).send(err);
-}
-client.query('SELECT name FROM london_poi' ,function(err,result) {
-done();
-if(err){
-console.log(err);
-res.status(400).send(err);
-}
-res.status(200).send(result.rows);
-});
-});
-});
+
 
 app.post('/uploadData', function(req,res){
 	//note that we are using POST here as we are uploading data 
@@ -77,9 +62,14 @@ app.post('/uploadData', function(req,res){
 		var surname = req.body.surname;
 		var modulecode=req.body.modulecode;
 		var portnum = req.body.port_id;
-		var querystring = "INSERT into formdata (name,surname,modulecode,port_id) values ($1,$2,$3,$4)";
+		var language = req.body.language;
+		var modulelist=req.body.modulelist;
+		var lecturetime = req.body.lecturetime;
+		var geometrystring = "st geomfromtext ('POINT("+req.body.longitude+" "+req.body.latitude+")')";
+		var querystring = "INSERT into formdata (name,surname,modulecode,port_id,language,modulelist,lecturetime,geom) values ($1,$2,$3,$4,$5,$6,$7,";
+		var querystring = querystring + geometrystring + ")";
 		console.log(querystring);
-		client.query(querystring,[name, surname, modulecode,portnum], function(err,result){
+		client.query(querystring,[name, surname, modulecode,portnum,language,modulelist,lecturetime], function(err,result){
 			done();
 			if(err){
 				console.log(err);
