@@ -75,7 +75,7 @@ app.post('/uploadData', function (req, res) {
         }
         var name = req.body.name;
         var surname = req.body.surname;
-        var modulecode = req.body.modulecode;
+        var module = req.body.module;
         var portnum = req.body.port_id;
         var language = req.body.language;
         var modulelist = req.body.modulelist;
