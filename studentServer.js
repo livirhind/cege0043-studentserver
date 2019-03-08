@@ -88,14 +88,6 @@ app.post('/uploadData', function (req, res) {
         var modulelist = req.body.modulelist;
         var lecturetime = req.body.lecturetime;
         var geometrystring = "st_geomfromtext('POINT(" + req.body.longitude + " " + req.body.latitude + ")')";
-        
-        console.log(name)
-        console.log(surname)
-        console.log(module)
-        console.log(portnum)
-        console.log(language)
-        console.log(modulelist)
-        console.log(geometrystring)
 
         var querystring = "INSERT into formdata (name,surname,module, port_id,language, modulelist, lecturetime, geom) values ($1,$2,$3,$4,$5,$6,$7,";
         var querystring = querystring + geometrystring + ") ";
@@ -106,7 +98,9 @@ app.post('/uploadData', function (req, res) {
                 console.log(err);
                 res.status(400).send(err);
             }
-            res.status(200).send("row inserted"); });
+            res.status(200).send("row inserted");
+
+        });
     });
 
 });
@@ -173,9 +167,18 @@ res.status(200).send(result.rows);
 });
 });
 
+app.get('/',function(req,res){
+    res.send("hello world from the HTTP server");
+});
 
 
-
+//log the requests for debugging
+app.use(function(req,res,next){
+    var filename = path.basename(req.url);
+    var extension = path.extname(filename);
+    console.log("The file "+ filename + " was requested.");
+    next();
+});
 //serve static files e.g. html, css 
 //this should always be the last line in the server file
 app.use(express.static(__dirname));
