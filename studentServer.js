@@ -105,7 +105,7 @@ app.post('/uploadData', function (req, res) {
 
 });
 
-app.get('/getFormData/:port_id', function (req,res) {
+app.get('/startFormDataLoad/:port_id', function (req,res) {
       pool.connect(function(err,client,done) {
     if(err){
    console.log("not able to get connection "+ err);
